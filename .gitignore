@@ -1,0 +1,6 @@
+.gradle
+allure-results
+build
+gradle
+gradlew
+gradlew.bat
