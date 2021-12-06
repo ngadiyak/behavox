@@ -4,22 +4,16 @@ import behavox.qa.api.entities.responses.ErrorResponse;
 import behavox.qa.api.entities.responses.SubmitResponse;
 import behavox.qa.filters.BasicAuthFilter;
 import lombok.val;
-import org.exparity.hamcrest.date.LocalDateTimeMatchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static behavox.qa.Constants.STATUS_BASE_PATH;
 import static behavox.qa.api.entities.responses.ExecutionStatuses.*;
 import static java.net.HttpURLConnection.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 @Tag("Status")
 public class StatusEndpointTestSuite extends BaseTestSuite {
@@ -58,11 +52,7 @@ public class StatusEndpointTestSuite extends BaseTestSuite {
                 .andReturn()
                 .as(ErrorResponse.class);
 
-        assertThat(LocalDateTime.now(ZoneOffset.UTC), LocalDateTimeMatchers.within(2, ChronoUnit.SECONDS, LocalDateTime.parse(errorResponse.timestamp.substring(0, 23))));
-        Assertions.assertEquals(HTTP_BAD_REQUEST, errorResponse.status);
-        Assertions.assertEquals("Bad Request", errorResponse.error);
-        Assertions.assertEquals("", errorResponse.message);
-        Assertions.assertEquals(STATUS_BASE_PATH, errorResponse.path);
+        validateError(new ErrorResponse(STATUS_BASE_PATH, "Bad Request", "", HTTP_BAD_REQUEST), errorResponse);
     }
 
     @Test
@@ -93,10 +83,6 @@ public class StatusEndpointTestSuite extends BaseTestSuite {
                 .andReturn()
                 .as(ErrorResponse.class);
 
-        assertThat(LocalDateTime.now(ZoneOffset.UTC), LocalDateTimeMatchers.within(2, ChronoUnit.SECONDS, LocalDateTime.parse(errorResponse.timestamp.substring(0, 23))));
-        Assertions.assertEquals(HTTP_NOT_FOUND, errorResponse.status);
-        Assertions.assertEquals("Not Found", errorResponse.error);
-        Assertions.assertEquals("", errorResponse.message);
-        Assertions.assertEquals(STATUS_BASE_PATH, errorResponse.path);
+        validateError(new ErrorResponse(STATUS_BASE_PATH, "Not Found", "", HTTP_NOT_FOUND), errorResponse);
     }
 }

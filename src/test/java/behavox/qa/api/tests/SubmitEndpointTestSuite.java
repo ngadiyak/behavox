@@ -4,17 +4,12 @@ import behavox.qa.api.entities.responses.ErrorResponse;
 import behavox.qa.api.entities.responses.SubmitResponse;
 import behavox.qa.filters.BasicAuthFilter;
 import lombok.val;
-import org.exparity.hamcrest.date.LocalDateTimeMatchers;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
@@ -76,11 +71,7 @@ public class SubmitEndpointTestSuite extends BaseTestSuite {
                 .andReturn()
                 .as(ErrorResponse.class);
 
-        assertThat(LocalDateTime.now(ZoneOffset.UTC), LocalDateTimeMatchers.within(2, ChronoUnit.SECONDS, LocalDateTime.parse(errorResponse.timestamp.substring(0, 23))));
-        Assertions.assertEquals(HTTP_BAD_REQUEST, errorResponse.status);
-        Assertions.assertEquals("Bad Request", errorResponse.error);
-        Assertions.assertEquals("", errorResponse.message);
-        Assertions.assertEquals(SUBMIT_PATH, errorResponse.path);
+        validateError(new ErrorResponse(SUBMIT_PATH, "Bad Request", "", HTTP_BAD_REQUEST), errorResponse);
     }
 
     @Test
