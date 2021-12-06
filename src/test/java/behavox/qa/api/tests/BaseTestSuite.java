@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static behavox.qa.Constants.*;
-import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.hamcrest.MatcherAssert.assertThat;
 
