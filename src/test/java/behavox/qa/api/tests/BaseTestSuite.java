@@ -1,5 +1,6 @@
 package behavox.qa.api.tests;
 
+import behavox.qa.api.entities.responses.ErrorResponse;
 import behavox.qa.api.entities.responses.ExecutionStatuses;
 import behavox.qa.api.entities.responses.StatusResponse;
 import behavox.qa.filters.BasicAuthFilter;
@@ -11,6 +12,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import lombok.val;
+import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.provider.Arguments;
@@ -20,12 +22,17 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import static behavox.qa.Constants.*;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_OK;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 
 @Testcontainers
@@ -60,6 +67,14 @@ public class BaseTestSuite {
         return new HashMap<String, String>() {{
             put("code", code);
         }};
+    }
+
+    protected void validateError(ErrorResponse expected, ErrorResponse actual) {
+        assertThat(LocalDateTime.now(ZoneOffset.UTC), LocalDateTimeMatchers.within(2, ChronoUnit.SECONDS, LocalDateTime.parse(actual.timestamp.substring(0, 23))));
+        Assertions.assertEquals(expected.status, actual.status);
+        Assertions.assertEquals(expected.error, actual.error);
+        Assertions.assertEquals(expected.message, actual.message);
+        Assertions.assertEquals(expected.path, actual.path);
     }
 
     protected void validateHttpStatusCode(ValidatableResponse response, int expectedStatusCode) {
