@@ -48,6 +48,22 @@ public class StatusEndpointTestSuite extends BaseTestSuite {
     }
 
     @Test
+    public void shouldReturnErrorForIncorrectId() {
+        val errorResponse = api.status("incorrect")
+                .statusCode(HTTP_BAD_REQUEST)
+                .extract()
+                .response()
+                .andReturn()
+                .as(ErrorResponse.class);
+
+        assertThat(LocalDateTime.now(ZoneOffset.UTC), LocalDateTimeMatchers.within(2, ChronoUnit.SECONDS, LocalDateTime.parse(errorResponse.timestamp.substring(0, 23))));
+        Assertions.assertEquals(HTTP_BAD_REQUEST, errorResponse.status);
+        Assertions.assertEquals("Bad Request", errorResponse.error);
+        Assertions.assertEquals("", errorResponse.message);
+        Assertions.assertEquals(STATUS_BASE_PATH, errorResponse.path);
+    }
+
+    @Test
     public void shouldReturn401WithoutAuth() {
         validateHttpStatusCode(api.statusNoFilters(UUID.randomUUID().toString()), HTTP_UNAUTHORIZED);
     }
@@ -66,22 +82,6 @@ public class StatusEndpointTestSuite extends BaseTestSuite {
         val id = submitResponse.id;
 
         validateHttpStatusCode(api.status(id, new BasicAuthFilter("user_2", "pass_2")), HTTP_FORBIDDEN);
-    }
-
-    @Test
-    public void shouldReturnErrorForIncorrectId() {
-        val errorResponse = api.status("incorrect")
-                .statusCode(HTTP_BAD_REQUEST)
-                .extract()
-                .response()
-                .andReturn()
-                .as(ErrorResponse.class);
-
-        assertThat(LocalDateTime.now(ZoneOffset.UTC), LocalDateTimeMatchers.within(2, ChronoUnit.SECONDS, LocalDateTime.parse(errorResponse.timestamp.substring(0, 23))));
-        Assertions.assertEquals(HTTP_BAD_REQUEST, errorResponse.status);
-        Assertions.assertEquals("Bad Request", errorResponse.error);
-        Assertions.assertEquals("", errorResponse.message);
-        Assertions.assertEquals(STATUS_BASE_PATH, errorResponse.path);
     }
 
     @Test

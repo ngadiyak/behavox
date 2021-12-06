@@ -31,13 +31,10 @@ import static java.net.HttpURLConnection.HTTP_OK;
 @Testcontainers
 public class BaseTestSuite {
 
-
     @Container
     protected static final GenericContainer service = new GenericContainer(DockerImageName.parse(System.getenv().getOrDefault("TEST_IMAGE", TEST_IMAGE)))
             .withExposedPorts(BASE_API_PORT)
-            .waitingFor(
-                    Wait.forLogMessage(".*Started GroovyApplicationKt.*", 1)
-            );
+            .waitingFor(Wait.forLogMessage(".*Started GroovyApplicationKt.*", 1));
 
     protected ApiHelper api = new ApiHelper();
 

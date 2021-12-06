@@ -43,7 +43,7 @@ public class SubmitEndpointTestSuite extends BaseTestSuite {
     }
 
     @Test
-    public void shouldHandleSameRequestsTwice() {
+    public void shouldHandleSameCodeMoreThanOnce() {
         validateHttpStatusCode(api.submit(mkSubmitBody("1 + 100")), HTTP_OK);
         validateHttpStatusCode(api.submit(mkSubmitBody("1 + 100")), HTTP_OK);
     }

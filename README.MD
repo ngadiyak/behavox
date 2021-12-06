@@ -1,7 +1,8 @@
 ## Groovy code execution service tests
 
 ### Requirements
-* Specify version for test set up environment variable TEST_IMAGE (or tag `behavox/product-qa-groovy-1.0.1:latest` will be used )
+* Specify version of the service by setting up environment variable `TEST_IMAGE` 
+(or default value `behavox/product-qa-groovy-1.0.1:latest` will be used)
 * [Install alure framework](https://docs.qameta.io/allure/#_get_started)
 
 ### Run test: 
