@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    options {
-        ansiColor('xterm')
-        timestamps()
-    }
     environment {
         TEST_IMAGE = "${TEST_IMAGE}"
     }
@@ -16,8 +12,7 @@ pipeline {
     }
     post {
         always {
-            sh '''echo "VERSION=${TEST_IMAGE}" > ./allure-results/environment.properties'''
-            allure results: [[path: 'allure-results']]
+            junit '**/test-reports/*.xml'
         }
         cleanup {
             cleanWs()

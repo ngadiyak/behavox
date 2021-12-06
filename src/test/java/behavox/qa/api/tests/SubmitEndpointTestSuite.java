@@ -6,6 +6,7 @@ import behavox.qa.filters.BasicAuthFilter;
 import lombok.val;
 import org.exparity.hamcrest.date.LocalDateTimeMatchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,9 +25,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 
 
+@Tag("Submit")
 public class SubmitEndpointTestSuite extends BaseTestSuite {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "shouldExecuteCodeAndReturnCompletedResult | {0}")
     @MethodSource("submitCorrectParameters")
     public void shouldExecuteCodeAndReturnCompletedResult(String code, String result) {
         val id = api.submit(SubmitResponse.class, mkSubmitBody(code), HTTP_OK).id;
@@ -86,7 +88,7 @@ public class SubmitEndpointTestSuite extends BaseTestSuite {
         validateHttpStatusCode(api.submitNoFilters(mkRandomSubmitBody()), HTTP_UNAUTHORIZED);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "shouldReturn401WithoutCorrectBasicAuth | [user: {0}; pass:{1}]")
     @MethodSource("authIncorrectParameters")
     public void shouldReturn401WithoutCorrectBasicAuth(String user, String password) {
         validateHttpStatusCode(api.submit(mkRandomSubmitBody(), new BasicAuthFilter(user, password)), HTTP_UNAUTHORIZED);

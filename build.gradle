@@ -20,9 +20,9 @@ dependencies {
     testImplementation 'io.rest-assured:json-schema-validator:4.4.0'
     testImplementation 'org.hamcrest:java-hamcrest:2.0.0.0'
     testImplementation 'org.exparity:hamcrest-date:2.0.7'
+    testImplementation 'org.slf4j:slf4j-simple:1.7.32'
     testCompileOnly 'org.projectlombok:lombok:1.18.22'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
-    testImplementation group: 'io.qameta.allure', name: 'allure-junit5', version: '2.17.0'
 }
 
 test {
